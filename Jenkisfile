@@ -1,8 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'papitodev/playwright-nj-v1.50.1-noble'
-        }
+        any
     }
 
     stages {
