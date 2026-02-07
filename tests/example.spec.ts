@@ -62,7 +62,7 @@ test('footer contains community links', async ({ page }) => {
   await expect(footer).toBeVisible();
 });
 
-test.fixme('docs page has sidebar navigation', async ({ page }) => {
+test('docs page has sidebar navigation', async ({ page }) => {
   await page.goto('https://playwright.dev/docs/intro');
 
   // Check for sidebar with navigation
@@ -96,7 +96,7 @@ test('FLAKY: checking dynamic content without proper wait', async ({ page }) => 
   await expect(page).toHaveURL(/.*intro/);
 });
 
-test.fixme('FLAKY: dependent on network speed', async ({ page }) => {
+test('FLAKY: dependent on network speed', async ({ page }) => {
   // Set very short timeout
   page.setDefaultTimeout(500); // Very aggressive timeout
   
@@ -106,7 +106,7 @@ test.fixme('FLAKY: dependent on network speed', async ({ page }) => {
   await expect(page.locator('body')).toBeVisible();
 });
 
-test.fixme('FLAKY: checking count of elements that might vary', async ({ page }) => {
+test('FLAKY: checking count of elements that might vary', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 
   // Element counts might vary based on page state or A/B testing
@@ -117,7 +117,7 @@ test.fixme('FLAKY: checking count of elements that might vary', async ({ page })
   expect(count).toBe(42); // Hardcoded expectation
 });
 
-test.fixme('FLAKY: timestamp-based assertion', async ({ page }) => {
+test('FLAKY: timestamp-based assertion', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 
   const now = Date.now();
@@ -131,7 +131,7 @@ test.fixme('FLAKY: timestamp-based assertion', async ({ page }) => {
   expect(elapsed).toBeLessThan(100); // Might fail on slower systems
 });
 
-test.fixme('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
+test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
   await page.goto('https://playwright.dev/');
 
   const heading = page.locator('h1').first();
