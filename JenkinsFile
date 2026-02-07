@@ -1,0 +1,21 @@
+pipeline {
+    agent {
+        docker {
+            image 'papitodev/playwright-nj-v1.50.1-noble'
+            args '--network qatw-primeira-edicao_skynet'
+        }
+    }
+
+    stages {
+        stage('Install project dependencies - Node.js') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Execute Playwright Tests') {
+            steps {
+                sh 'npx playwright test'
+            }
+        }
+    }
+}
