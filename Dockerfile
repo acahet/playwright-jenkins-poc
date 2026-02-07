@@ -1,4 +1,4 @@
-FROM docker pull mcr.microsoft.com/playwright:v1.58.0-noble
+FROM mcr.microsoft.com/playwright:v1.58.0-noble
 
 # Install dependencies and Open JDK21
 

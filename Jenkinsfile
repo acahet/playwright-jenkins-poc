@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'mcr.microsoft.com/playwright:v1.58.0-noble'
+            image 'acahet/playwright:v1.58.0-noble'
             args '--ipc=host'
         }
     }
@@ -15,6 +15,7 @@ pipeline {
         stage('Execute Playwright Tests') {
             steps {
                 sh 'npx playwright test'
+                allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
             }
         }
     }
