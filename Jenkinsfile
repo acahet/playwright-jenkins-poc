@@ -18,31 +18,35 @@ environment {
         }
         stage('Execute Playwright Tests') {
             steps {
-                sh 'npx playwright test'
-                 
-                 sh '''
-                  mkdir -p allure-results
-                  if [ -d "$ALLURE_HISTORY_DIR/history" ]; then
-                    cp -r $ALLURE_HISTORY_DIR/history allure-results/
-                  fi
-                '''
-                sh '''
-                  allure generate allure-results --clean -o allure-report
-                '''
-               sh '''
-                  rm -rf $ALLURE_HISTORY_DIR/history
-                  mkdir -p $ALLURE_HISTORY_DIR
-                  cp -r allure-report/history $ALLURE_HISTORY_DIR/
-                '''
-                publishHTML([
-                    reportName: 'Allure Report',
-                    reportDir: 'allure-report',
-                    reportFiles: 'index.html',
-                    keepAll: true,
-                    alwaysLinkToLastBuild: true
-                ])
-
+                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                                        sh 'npx playwright test'
+                                }
             }
+                        post {
+                                always {
+                                        sh '
+                                            mkdir -p allure-results
+                                            if [ -d "$ALLURE_HISTORY_DIR/history" ]; then
+                                                cp -r $ALLURE_HISTORY_DIR/history allure-results/
+                                            fi
+                                        '
+                                        sh '
+                                            allure generate allure-results --clean -o allure-report
+                                        '
+                                        sh '
+                                            rm -rf $ALLURE_HISTORY_DIR/history
+                                            mkdir -p $ALLURE_HISTORY_DIR
+                                            cp -r allure-report/history $ALLURE_HISTORY_DIR/
+                                        '
+                                        publishHTML([
+                                                reportName: 'Allure Report',
+                                                reportDir: 'allure-report',
+                                                reportFiles: 'index.html',
+                                                keepAll: true,
+                                                alwaysLinkToLastBuild: true
+                                        ])
+                                }
+                        }
         }
         
     }
