@@ -64,41 +64,51 @@ pipeline {
                         cp -r /tmp/allure-report-temp/* build-${BUILD_NUMBER}/
                         cp -r /tmp/allure-report-temp/* latest/
                         
-                        # Generate index page with links to all builds
-                        cat > index.html << 'EOF'
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Playwright Test Reports</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        h1 { color: #333; }
-        ul { list-style: none; padding: 0; }
-        li { margin: 10px 0; }
-        a { color: #0066cc; text-decoration: none; font-size: 18px; }
-        a:hover { text-decoration: underline; }
-        .latest { font-weight: bold; color: #00aa00; }
-    </style>
-</head>
-<body>
-    <h1>Playwright Test Reports</h1>
-    <ul>
-        <li><a href="latest/" class="latest">Latest Build</a></li>
-EOF
+                        # Copy template and generate index page
+                        git checkout main -- report-index-template.html || true
+                        cp report-index-template.html index.html
                         
-                        # Add links to all build directories
+                        # Generate JavaScript to populate builds list
+                        cat > builds.js << 'JSEOF'
+// Populate builds list
+const buildsList = document.getElementById('buildsList');
+const builds = [];
+JSEOF
+                        
+                        # Add build entries to JavaScript
                         for dir in build-*/; do
                             if [ -d "$dir" ]; then
                                 build_num=$(echo $dir | sed 's/build-//;s|/||')
-                                echo "        <li><a href=\"$dir\">Build #$build_num</a></li>" >> index.html
+                                echo "builds.push({ number: $build_num, path: '$dir' });" >> builds.js
                             fi
                         done
                         
-                        cat >> index.html << 'EOF'
-    </ul>
-</body>
-</html>
-EOF
+                        cat >> builds.js << 'JSEOF'
+
+// Sort builds in descending order
+builds.sort((a, b) => b.number - a.number);
+
+// Generate HTML
+if (builds.length === 0) {
+    buildsList.innerHTML = '<div class="no-builds">No historical builds available yet.</div>';
+} else {
+    builds.forEach(build => {
+        const buildItem = document.createElement('div');
+        buildItem.className = 'build-item';
+        buildItem.innerHTML = `
+            <a href="${build.path}">
+                <div class="build-number">#${build.number}</div>
+                <div class="build-label">Test Report</div>
+            </a>
+        `;
+        buildsList.appendChild(buildItem);
+    });
+}
+JSEOF
+                        
+                        # Inject script into HTML
+                        sed -i.bak 's|</body>|<script src="builds.js"></script></body>|' index.html
+                        rm -f index.html.bak
                         
                         # Add and commit
                         git add .
