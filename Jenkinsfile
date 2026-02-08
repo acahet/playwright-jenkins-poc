@@ -47,7 +47,9 @@ pipeline {
                         
                         # Copy allure-report and template to temp location
                         cp -r allure-report /tmp/allure-report-temp
+                        ls -la report-index-template.html
                         cp report-index-template.html /tmp/report-index-template.html
+                        echo "Template copied to /tmp"
                         
                         # Stash any local changes
                         git add -A
@@ -67,6 +69,8 @@ pipeline {
                         
                         # Copy template and generate index page
                         cp /tmp/report-index-template.html index.html
+                        echo "Index.html created from template"
+                        ls -la index.html
                         
                         # Generate JavaScript to populate builds list
                         cat > builds.js << 'JSEOF'
