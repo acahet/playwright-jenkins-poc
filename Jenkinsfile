@@ -42,6 +42,7 @@ environment {
                                                 reportName: 'Allure Report',
                                                 reportDir: 'allure-report',
                                                 reportFiles: 'index.html',
+                                            allowMissing: true,
                                                 keepAll: true,
                                                 alwaysLinkToLastBuild: true
                                         ])
