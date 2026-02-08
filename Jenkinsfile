@@ -10,6 +10,7 @@ pipeline {
         stage('Install project dependencies - Node.js') {
             steps {
                 sh 'npm install'
+                sh 'npx playwright install msedge'
             }
         }
         stage('Execute Playwright Tests') {
