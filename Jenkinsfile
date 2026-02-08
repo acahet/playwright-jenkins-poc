@@ -6,6 +6,15 @@ pipeline {
         }
     }
 
+    // triggers {
+        
+        
+        // Option 2: Cron schedule - Run daily at 8 AM
+        // cron('0 8 * * *')
+        
+        
+    // }
+
     stages {
         stage('Install project dependencies - Node.js') {
             steps {
@@ -47,7 +56,7 @@ pipeline {
                     fi
                     
                     # Generate standalone HTML report with history
-                    npx allure generate allure-results --clean -o allure-report
+                    npx allure generate allure-results --clean -o allure-report --locale it
                 '''
             }
         }
