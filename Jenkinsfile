@@ -56,23 +56,63 @@ pipeline {
                         git fetch origin gh-pages:gh-pages || true
                         git checkout gh-pages || git checkout --orphan gh-pages
                         
-                        # Remove all files
-                        git rm -rf . || true
-                        rm -rf * .gitignore .github || true
+                        # Create build directory structure
+                        mkdir -p build-${BUILD_NUMBER}
+                        mkdir -p latest
                         
-                        # Copy report files
-                        cp -r /tmp/allure-report-temp/* .
+                        # Copy report to build-specific and latest directories
+                        cp -r /tmp/allure-report-temp/* build-${BUILD_NUMBER}/
+                        cp -r /tmp/allure-report-temp/* latest/
+                        
+                        # Generate index page with links to all builds
+                        cat > index.html << 'EOF'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Playwright Test Reports</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { color: #0066cc; text-decoration: none; font-size: 18px; }
+        a:hover { text-decoration: underline; }
+        .latest { font-weight: bold; color: #00aa00; }
+    </style>
+</head>
+<body>
+    <h1>Playwright Test Reports</h1>
+    <ul>
+        <li><a href="latest/" class="latest">Latest Build</a></li>
+EOF
+                        
+                        # Add links to all build directories
+                        for dir in build-*/; do
+                            if [ -d "$dir" ]; then
+                                build_num=$(echo $dir | sed 's/build-//;s|/||')
+                                echo "        <li><a href=\"$dir\">Build #$build_num</a></li>" >> index.html
+                            fi
+                        done
+                        
+                        cat >> index.html << 'EOF'
+    </ul>
+</body>
+</html>
+EOF
                         
                         # Add and commit
                         git add .
-                        git commit -m "Update Allure report - Build #${BUILD_NUMBER}" || true
+                        git commit -m "Add Allure report for Build #${BUILD_NUMBER}" || true
                         
                         # Push using HTTPS with token
                         git remote set-url origin https://${GIT_TOKEN}@github.com/acahet/playwright-jenkins-poc.git
-                        git push origin gh-pages --force
+                        git push origin gh-pages
                     '''
                 }
-                echo "Allure Report published to: https://acahet.github.io/playwright-jenkins-poc/"
+                echo "Allure Report published to:"
+                echo "  - Latest: https://acahet.github.io/playwright-jenkins-poc/latest/"
+                echo "  - Build #${BUILD_NUMBER}: https://acahet.github.io/playwright-jenkins-poc/build-${BUILD_NUMBER}/"
+                echo "  - All builds: https://acahet.github.io/playwright-jenkins-poc/"
             }
         }
     }
