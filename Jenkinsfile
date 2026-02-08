@@ -29,6 +29,14 @@ pipeline {
                 allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
             }
         }
+        stage('Generate Allure HTML Report') {
+            steps {
+                sh '''
+                    # Generate standalone HTML report
+                    npx allure generate allure-results --clean -o allure-report
+                '''
+            }
+        }
         stage('Publish to GitHub Pages') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
