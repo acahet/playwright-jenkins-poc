@@ -3,6 +3,7 @@ const buildsList = document.getElementById('buildsList');
 const builds = [];
 builds.push({ number: 34, path: 'build-34/' });
 builds.push({ number: 36, path: 'build-36/' });
+builds.push({ number: 37, path: 'build-37/' });
 
 // Sort builds in descending order
 builds.sort((a, b) => b.number - a.number);
