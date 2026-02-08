@@ -58,7 +58,7 @@ pipeline {
                         git push origin gh-pages --force
                     '''
                 }
-                echo "Allure Report published to: https://andersoncahet.github.io/playwright-jenkins-poc/"
+                echo "Allure Report published to: https://acahet.github.io/playwright-jenkins-poc/"
             }
         }
     }
