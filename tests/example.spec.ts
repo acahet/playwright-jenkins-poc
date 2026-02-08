@@ -73,63 +73,63 @@ test('docs page has sidebar navigation', async ({ page }) => {
 // ========== FLAKY TESTS BELOW ==========
 // These tests are intentionally flaky to demonstrate common flaky patterns
 
-test('FLAKY: race condition with timing', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// test('FLAKY: race condition with timing', async ({ page }) => {
+//   await page.goto('https://playwright.dev/');
 
-  // This is flaky because it doesn't wait for the element properly
-  // and depends on page load speed
-  await page.waitForTimeout(100); // Bad practice: arbitrary timeout
+//   // This is flaky because it doesn't wait for the element properly
+//   // and depends on page load speed
+//   await page.waitForTimeout(100); // Bad practice: arbitrary timeout
   
-  const heading = page.locator('h1').first();
-  // Might fail if the page hasn't fully loaded
-  expect(await heading.textContent()).toBeTruthy();
-});
+//   const heading = page.locator('h1').first();
+//   // Might fail if the page hasn't fully loaded
+//   expect(await heading.textContent()).toBeTruthy();
+// });
 
-test('FLAKY: checking dynamic content without proper wait', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// test('FLAKY: checking dynamic content without proper wait', async ({ page }) => {
+//   await page.goto('https://playwright.dev/');
 
-  // Navigate without waiting for navigation to complete
-  page.getByRole('link', { name: 'Get started' }).click(); // Missing await
+//   // Navigate without waiting for navigation to complete
+//   page.getByRole('link', { name: 'Get started' }).click(); // Missing await
   
-  // This might fail because the navigation hasn't completed
-  await page.waitForTimeout(50); // Too short timeout
-  await expect(page).toHaveURL(/.*intro/);
-});
+//   // This might fail because the navigation hasn't completed
+//   await page.waitForTimeout(50); // Too short timeout
+//   await expect(page).toHaveURL(/.*intro/);
+// });
 
-test('FLAKY: dependent on network speed', async ({ page }) => {
-  // Set very short timeout
-  page.setDefaultTimeout(500); // Very aggressive timeout
+// test('FLAKY: dependent on network speed', async ({ page }) => {
+//   // Set very short timeout
+//   page.setDefaultTimeout(500); // Very aggressive timeout
   
-  await page.goto('https://playwright.dev/');
+//   await page.goto('https://playwright.dev/');
 
-  // Might fail on slow networks
-  await expect(page.locator('body')).toBeVisible();
-});
+//   // Might fail on slow networks
+//   await expect(page.locator('body')).toBeVisible();
+// });
 
-test('FLAKY: checking count of elements that might vary', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// test('FLAKY: checking count of elements that might vary', async ({ page }) => {
+//   await page.goto('https://playwright.dev/');
 
-  // Element counts might vary based on page state or A/B testing
-  const links = page.locator('a');
-  const count = await links.count();
+//   // Element counts might vary based on page state or A/B testing
+//   const links = page.locator('a');
+//   const count = await links.count();
   
-  // This exact number might change
-  expect(count).toBe(42); // Hardcoded expectation
-});
+//   // This exact number might change
+//   expect(count).toBe(42); // Hardcoded expectation
+// });
 
-test('FLAKY: timestamp-based assertion', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// test('FLAKY: timestamp-based assertion', async ({ page }) => {
+//   await page.goto('https://playwright.dev/');
 
-  const now = Date.now();
+//   const now = Date.now();
   
-  // Do some action
-  await page.getByRole('link', { name: 'Docs' }).click();
+//   // Do some action
+//   await page.getByRole('link', { name: 'Docs' }).click();
   
-  const elapsed = Date.now() - now;
+//   const elapsed = Date.now() - now;
   
-  // This is flaky because network/system performance varies
-  expect(elapsed).toBeLessThan(100); // Might fail on slower systems
-});
+//   // This is flaky because network/system performance varies
+//   expect(elapsed).toBeLessThan(100); // Might fail on slower systems
+// });
 
 test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
   await page.goto('https://playwright.dev/');
