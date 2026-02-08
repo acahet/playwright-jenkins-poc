@@ -31,36 +31,34 @@ pipeline {
         }
         stage('Publish to GitHub Pages') {
             steps {
-                script {
-                    sshagent(credentials: ['github-ssh-key']) {
-                        sh '''
-                            # Configure git
-                            git config user.name "andersoncahet§"
-                            git config user.email "jenkins@ci.com"
-                            
-                            # Copy allure-report to a temp location
-                            cp -r allure-report /tmp/allure-report-temp
-                            
-                            # Create or checkout gh-pages branch
-                            git checkout --orphan gh-pages || git checkout gh-pages
-                            
-                            # Remove all files
-                            git rm -rf . || true
-                            
-                            # Copy report files
-                            cp -r /tmp/allure-report-temp/* .
-                            
-                            # Add and commit
-                            git add .
-                            git commit -m "Update Allure report - Build #${BUILD_NUMBER}" || true
-                            
-                            # Push using SSH
-                            git remote set-url origin git@github.com:andersoncahet/playwright-jenkins-poc.git
-                            git push origin gh-pages --force
-                        '''
-                    }
-                    echo "Allure Report published to: https://andersoncahet.github.io/playwright-jenkins-poc/"
+                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_TOKEN')]) {
+                    sh '''
+                        # Configure git
+                        git config user.name "andersoncahet§"
+                        git config user.email "jenkins@ci.com"
+                        
+                        # Copy allure-report to a temp location
+                        cp -r allure-report /tmp/allure-report-temp
+                        
+                        # Create or checkout gh-pages branch
+                        git checkout --orphan gh-pages || git checkout gh-pages
+                        
+                        # Remove all files
+                        git rm -rf . || true
+                        
+                        # Copy report files
+                        cp -r /tmp/allure-report-temp/* .
+                        
+                        # Add and commit
+                        git add .
+                        git commit -m "Update Allure report - Build #${BUILD_NUMBER}" || true
+                        
+                        # Push using HTTPS with token
+                        git remote set-url origin https://${GIT_TOKEN}@github.com/andersoncahet/playwright-jenkins-poc.git
+                        git push origin gh-pages --force
+                    '''
                 }
+                echo "Allure Report published to: https://andersoncahet.github.io/playwright-jenkins-poc/"
             }
         }
     }
