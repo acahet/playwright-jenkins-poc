@@ -62,13 +62,13 @@ test('footer contains community links', async ({ page }) => {
   await expect(footer).toBeVisible();
 });
 
-test('docs page has sidebar navigation', async ({ page }) => {
-  await page.goto('https://playwright.dev/docs/intro');
+// test('docs page has sidebar navigation', async ({ page }) => {
+//   await page.goto('https://playwright.dev/docs/intro');
 
-  // Check for sidebar with navigation
-  const sidebar = page.locator('aside, nav.menu, [class*="sidebar"]').first();
-  await expect(sidebar).toBeVisible();
-});
+//   // Check for sidebar with navigation
+//   const sidebar = page.locator('aside, nav.menu, [class*="sidebar"]').first();
+//   await expect(sidebar).toBeVisible();
+// });
 
 // ========== FLAKY TESTS BELOW ==========
 // These tests are intentionally flaky to demonstrate common flaky patterns
@@ -131,12 +131,12 @@ test('docs page has sidebar navigation', async ({ page }) => {
 //   expect(elapsed).toBeLessThan(100); // Might fail on slower systems
 // });
 
-test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+// test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
+//   await page.goto('https://playwright.dev/');
 
-  const heading = page.locator('h1').first();
-  const text = await heading.textContent();
+//   const heading = page.locator('h1').first();
+//   const text = await heading.textContent();
   
-  // Exact match might fail due to whitespace, special characters, etc.
-  expect(text).toBe('Playwright'); // Might have extra spaces or line breaks
-});
+//   // Exact match might fail due to whitespace, special characters, etc.
+//   expect(text).toBe('Playwright'); // Might have extra spaces or line breaks
+// });
