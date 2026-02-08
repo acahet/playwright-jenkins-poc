@@ -45,8 +45,9 @@ pipeline {
                         git config user.name "acahet"
                         git config user.email "jenkins@ci.com"
                         
-                        # Copy allure-report to a temp location
+                        # Copy allure-report and template to temp location
                         cp -r allure-report /tmp/allure-report-temp
+                        cp report-index-template.html /tmp/report-index-template.html
                         
                         # Stash any local changes
                         git add -A
@@ -65,8 +66,7 @@ pipeline {
                         cp -r /tmp/allure-report-temp/* latest/
                         
                         # Copy template and generate index page
-                        git checkout main -- report-index-template.html || true
-                        cp report-index-template.html index.html
+                        cp /tmp/report-index-template.html index.html
                         
                         # Generate JavaScript to populate builds list
                         cat > builds.js << 'JSEOF'
