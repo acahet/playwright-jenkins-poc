@@ -1,34 +1,22 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Allure Report</title>
-    <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="plugin/screen-diff/styles.css">
+    <title>Playwright Test Reports</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #333; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 10px 0; }
+        a { color: #0066cc; text-decoration: none; font-size: 18px; }
+        a:hover { text-decoration: underline; }
+        .latest { font-weight: bold; color: #00aa00; }
+    </style>
 </head>
 <body>
-    <div id="alert"></div>
-    <div id="content">
-        <span class="spinner">
-            <span class="spinner__circle"></span>
-        </span>
-    </div>
-    <div id="popup"></div>
-    <script src="app.js"></script>
-    <script src="plugin/behaviors/index.js"></script>
-    <script src="plugin/packages/index.js"></script>
-    <script src="plugin/screen-diff/index.js"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVWC4GKEYS"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-FVWC4GKEYS', {
-          'allureVersion': '2.36.0',
-          'reportUuid': 'ad5ec300-c315-42a7-a62e-e6ca987b6bba',
-          'single_file': false
-        });
-    </script>
+    <h1>Playwright Test Reports</h1>
+    <ul>
+        <li><a href="latest/" class="latest">Latest Build</a></li>
+        <li><a href=build-34/>Build #34</a></li>
+    </ul>
 </body>
 </html>
