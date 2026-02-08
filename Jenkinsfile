@@ -5,10 +5,6 @@ pipeline {
             args '--ipc=host'
         }
     }
-environment {
-        ALLURE_HISTORY_DIR = '/var/jenkins_home/allure-history'
-    }
-    
 
     stages {
         stage('Install project dependencies - Node.js') {
@@ -18,37 +14,9 @@ environment {
         }
         stage('Execute Playwright Tests') {
             steps {
-                                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                                        sh 'npx playwright test'
-                                }
+                sh 'npx playwright test'
+                allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
             }
-                        post {
-                                always {
-                                        sh '''
-                                            mkdir -p allure-results
-                                            if [ -d "$ALLURE_HISTORY_DIR/history" ]; then
-                                                cp -r $ALLURE_HISTORY_DIR/history allure-results/
-                                            fi
-                                        '''
-                                        sh '''
-                                            npx --yes allure-commandline generate allure-results --clean -o allure-report
-                                        '''
-                                        sh '''
-                                            rm -rf $ALLURE_HISTORY_DIR/history
-                                            mkdir -p $ALLURE_HISTORY_DIR
-                                            cp -r allure-report/history $ALLURE_HISTORY_DIR/
-                                        '''
-                                        publishHTML([
-                                                reportName: 'Allure Report',
-                                                reportDir: 'allure-report',
-                                                reportFiles: 'index.html',
-                                            allowMissing: true,
-                                                keepAll: true,
-                                                alwaysLinkToLastBuild: true
-                                        ])
-                                }
-                        }
         }
-        
     }
 }
