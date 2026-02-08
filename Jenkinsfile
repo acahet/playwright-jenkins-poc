@@ -14,10 +14,16 @@ pipeline {
         }
         stage('Execute Playwright Tests') {
             steps {
-                sh 'npm run test:ci:chrome'
-                sh 'npm run test:ci:firefox'
-                sh 'npm run test:ci:edge'
-                allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'npm run test:ci:chrome'
+                    sh 'npm run test:ci:firefox'
+                    sh 'npm run test:ci:edge'
+                }
+            }
+            post {
+                always {
+                    allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                }
             }
         }
     }

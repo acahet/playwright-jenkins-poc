@@ -131,12 +131,12 @@ test('footer contains community links', async ({ page }) => {
 //   expect(elapsed).toBeLessThan(100); // Might fail on slower systems
 // });
 
-// test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
-//   await page.goto('https://playwright.dev/');
+test('FLAKY: checking text that might have whitespace variations', async ({ page }) => {
+  await page.goto('https://playwright.dev/');
 
-//   const heading = page.locator('h1').first();
-//   const text = await heading.textContent();
+  const heading = page.locator('h1').first();
+  const text = await heading.textContent();
   
-//   // Exact match might fail due to whitespace, special characters, etc.
-//   expect(text).toBe('Playwright'); // Might have extra spaces or line breaks
-// });
+  // Exact match might fail due to whitespace, special characters, etc.
+  expect(text).toBe('Playwright'); // Might have extra spaces or line breaks
+});
