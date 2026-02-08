@@ -19,7 +19,7 @@ environment {
         stage('Execute Playwright Tests') {
             steps {
                 sh 'npx playwright test'
-                 allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                 
                  sh '''
                   mkdir -p allure-results
                   if [ -d "$ALLURE_HISTORY_DIR/history" ]; then
@@ -45,11 +45,5 @@ environment {
             }
         }
         
-    }
-
-    post {
-        always {
-            allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
-        }
     }
 }
