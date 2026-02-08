@@ -32,7 +32,21 @@ pipeline {
         stage('Generate Allure HTML Report') {
             steps {
                 sh '''
-                    # Generate standalone HTML report
+                    # Fetch previous results history from gh-pages branch
+                    git fetch origin gh-pages:gh-pages || true
+                    
+                    # Try to copy history from previous build if it exists
+                    if git show gh-pages:latest/history/history.json > /dev/null 2>&1; then
+                        mkdir -p allure-results/history
+                        git show gh-pages:latest/history/history.json > allure-results/history/history.json || true
+                        git show gh-pages:latest/history/history-trend.json > allure-results/history/history-trend.json || true
+                        git show gh-pages:latest/history/duration-trend.json > allure-results/history/duration-trend.json || true
+                        git show gh-pages:latest/history/retry-trend.json > allure-results/history/retry-trend.json || true
+                        git show gh-pages:latest/history/categories-trend.json > allure-results/history/categories-trend.json || true
+                        echo "History files copied successfully"
+                    fi
+                    
+                    # Generate standalone HTML report with history
                     npx allure generate allure-results --clean -o allure-report
                 '''
             }
@@ -47,9 +61,7 @@ pipeline {
                         
                         # Copy allure-report and template to temp location
                         cp -r allure-report /tmp/allure-report-temp
-                        ls -la report-index-template.html
                         cp report-index-template.html /tmp/report-index-template.html
-                        echo "Template copied to /tmp"
                         
                         # Stash any local changes
                         git add -A
@@ -69,8 +81,6 @@ pipeline {
                         
                         # Copy template and generate index page
                         cp /tmp/report-index-template.html index.html
-                        echo "Index.html created from template"
-                        ls -la index.html
                         
                         # Generate JavaScript to populate builds list
                         cat > builds.js << 'JSEOF'
