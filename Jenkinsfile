@@ -31,7 +31,7 @@ environment {
                                             fi
                                         '''
                                         sh '''
-                                            allure generate allure-results --clean -o allure-report
+                                            npx --yes allure-commandline generate allure-results --clean -o allure-report
                                         '''
                                         sh '''
                                             rm -rf $ALLURE_HISTORY_DIR/history
