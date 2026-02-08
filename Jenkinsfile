@@ -24,20 +24,20 @@ environment {
             }
                         post {
                                 always {
-                                        sh '
+                                        sh '''
                                             mkdir -p allure-results
                                             if [ -d "$ALLURE_HISTORY_DIR/history" ]; then
                                                 cp -r $ALLURE_HISTORY_DIR/history allure-results/
                                             fi
-                                        '
-                                        sh '
+                                        '''
+                                        sh '''
                                             allure generate allure-results --clean -o allure-report
-                                        '
-                                        sh '
+                                        '''
+                                        sh '''
                                             rm -rf $ALLURE_HISTORY_DIR/history
                                             mkdir -p $ALLURE_HISTORY_DIR
                                             cp -r allure-report/history $ALLURE_HISTORY_DIR/
-                                        '
+                                        '''
                                         publishHTML([
                                                 reportName: 'Allure Report',
                                                 reportDir: 'allure-report',
