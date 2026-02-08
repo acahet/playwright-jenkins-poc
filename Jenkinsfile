@@ -40,11 +40,17 @@ pipeline {
                         # Copy allure-report to a temp location
                         cp -r allure-report /tmp/allure-report-temp
                         
-                        # Create or checkout gh-pages branch
-                        git checkout --orphan gh-pages || git checkout gh-pages
+                        # Stash any local changes
+                        git add -A
+                        git stash || true
+                        
+                        # Fetch and checkout gh-pages branch
+                        git fetch origin gh-pages:gh-pages || true
+                        git checkout gh-pages || git checkout --orphan gh-pages
                         
                         # Remove all files
                         git rm -rf . || true
+                        rm -rf * .gitignore .github || true
                         
                         # Copy report files
                         cp -r /tmp/allure-report-temp/* .
