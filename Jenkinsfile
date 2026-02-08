@@ -15,9 +15,9 @@ pipeline {
         stage('Execute Playwright Tests') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'npm run test:ci:chrome'
-                    sh 'npm run test:ci:firefox'
-                    sh 'npm run test:ci:edge'
+                    sh 'npx playwright test --project=chromium'
+                    sh 'npx playwright test --project=firefox'
+                    sh 'npx playwright test --project="Microsoft Edge"'
                 }
             }
             post {
