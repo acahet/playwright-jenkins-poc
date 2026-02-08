@@ -14,7 +14,9 @@ pipeline {
         }
         stage('Execute Playwright Tests') {
             steps {
-                sh 'npx playwright test'
+                sh 'npm run test:ci:chrome'
+                sh 'npm run test:ci:firefox'
+                sh 'npm run test:ci:edge'
                 allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
             }
         }
