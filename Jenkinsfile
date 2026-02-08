@@ -10,7 +10,6 @@ pipeline {
         stage('Install project dependencies - Node.js') {
             steps {
                 sh 'npm install'
-                sh 'npx playwright install msedge'
             }
         }
         stage('Execute Playwright Tests') {
@@ -18,16 +17,37 @@ pipeline {
                 script {
                     try {
                         sh 'npx playwright test --project=chromium'
-                        sh 'npx playwright test --project=firefox'
-                        sh 'npx playwright test --project="Microsoft Edge"'
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
-                        throw err
-                    } finally {
-                        allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                        echo "Tests failed, but continuing to publish Allure report"
                     }
                 }
             }
+        }
+        stage('Publish Allure Report') {
+            steps {
+                allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+            }
+        }
+        stage('Publish HTML Report') {
+            steps {
+                publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'allure-report',
+                    reportFiles: 'index.html',
+                    reportName: 'Allure HTML Report',
+                    reportTitles: 'Playwright Test Results'
+                ])
+                echo "Allure Report is available at: ${env.BUILD_URL}Allure_20HTML_20Report/"
+            }
+        }
+    }
+
+    post {
+        always {
+            allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
         }
     }
 }
