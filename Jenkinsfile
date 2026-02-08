@@ -14,15 +14,17 @@ pipeline {
         }
         stage('Execute Playwright Tests') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'npx playwright test --project=chromium'
-                    sh 'npx playwright test --project=firefox'
-                    sh 'npx playwright test --project="Microsoft Edge"'
-                }
-            }
-            post {
-                always {
-                    allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                script {
+                    try {
+                        sh 'npx playwright test --project=chromium'
+                        sh 'npx playwright test --project=firefox'
+                        sh 'npx playwright test --project="Microsoft Edge"'
+                    } catch (err) {
+                        currentBuild.result = 'FAILURE'
+                        throw err
+                    } finally {
+                        allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
+                    }
                 }
             }
         }
