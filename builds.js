@@ -6,6 +6,7 @@ builds.push({ number: 36, path: 'build-36/' });
 builds.push({ number: 37, path: 'build-37/' });
 builds.push({ number: 38, path: 'build-38/' });
 builds.push({ number: 39, path: 'build-39/' });
+builds.push({ number: 41, path: 'build-41/' });
 
 // Sort builds in descending order
 builds.sort((a, b) => b.number - a.number);
