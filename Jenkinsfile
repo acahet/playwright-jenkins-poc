@@ -6,9 +6,6 @@ pipeline {
         }
     }
 
-    parameters {
-        string(name: 'GH_PAGES_URL', defaultValue: '', description: 'GitHub Pages URL for the published test results')
-    }
 
     stages {
         stage('Install project dependencies - Node.js') {
