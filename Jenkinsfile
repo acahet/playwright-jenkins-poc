@@ -27,8 +27,17 @@ pipeline {
                         currentBuild.result = 'FAILURE'
                         throw err
                     } finally {
-                        sh 'mkdir -p allure-results'
-                        sh 'if [ -n "$GH_PAGES_URL" ]; then echo "GitHub Pages Report=$GH_PAGES_URL" > allure-results/environment.properties; fi'
+                        sh '''
+                            mkdir -p allure-results
+                            if [ -n "$GH_PAGES_URL" ]; then
+                              cat > allure-results/environment.properties <<EOF
+GitHub Pages Report=$GH_PAGES_URL
+EOF
+                              cat > allure-results/executor.json <<EOF
+{"name":"Jenkins","type":"jenkins","reportUrl":"$GH_PAGES_URL","buildUrl":"$BUILD_URL","buildName":"$BUILD_TAG"}
+EOF
+                            fi
+                        '''
                         allure includeProperties: false, jdk: '', resultPolicy: 'LEAVE_AS_IS', results: [[path: 'allure-results']]
                     }
                 }
