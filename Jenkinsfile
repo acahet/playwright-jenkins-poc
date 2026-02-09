@@ -6,7 +6,6 @@ pipeline {
         }
     }
 
-
     stages {
         stage('Install project dependencies - Node.js') {
             steps {
